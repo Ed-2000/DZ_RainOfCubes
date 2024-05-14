@@ -1,13 +1,16 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class CubesSpawner : MonoBehaviour
 {
     [SerializeField] private Cube _cubePrefab;
     [SerializeField] private Platforma _platform;
 
-    private float _startSpawnTime = 0;
-    private float _spawnRepeatRate = 0.15f;
+    private CubeLifeCycle _cubeLifeCycle;
+    private ObjectPool<Cube> _pool;
     private Vector3 _spawnPosition;
+    private float _startSpawnTime = 0.0f;
+    private float _spawnRepeatRate = 0.15f;
     private float _minSpawnPositionX;
     private float _maxSpawnPositionX;
     private float _minSpawnPositionZ;
@@ -16,15 +19,51 @@ public class CubesSpawner : MonoBehaviour
     private void Start()
     {
         InitialLimitsOfStartingPosition();
-        InvokeRepeating(nameof(Spawn), _startSpawnTime, _spawnRepeatRate);
+
+        _pool = new ObjectPool<Cube>
+            (
+            createFunc: () => Instantiate(_cubePrefab),
+            actionOnGet: (obj) => ActionOnGet(obj),
+            actionOnRelease: (obj) => ActionOnRelease(obj),
+            actionOnDestroy: (obj) => ActionOnDestroy(obj)
+            );
+
+        InvokeRepeating(nameof(GetCube), _startSpawnTime, _spawnRepeatRate);
     }
 
-    private void Spawn()
+    private void ActionOnGet(Cube cube)
     {
+        cube.GetComponent<CubeLifeCycle>().ReleaseToPoolCube += Release;
+
         _spawnPosition.x = Random.Range(_minSpawnPositionX, _maxSpawnPositionX);
         _spawnPosition.z = Random.Range(_minSpawnPositionZ, _maxSpawnPositionZ);
 
-        Instantiate(_cubePrefab, _spawnPosition, Quaternion.identity);
+        cube.transform.position = _spawnPosition;
+        cube.gameObject.SetActive(true);
+    }
+
+    private void ActionOnRelease(Cube cube)
+    {
+        cube.GetComponent<CubeLifeCycle>().ReleaseToPoolCube -= Release;
+
+        cube.gameObject.SetActive(false);
+    }
+
+    private void ActionOnDestroy(Cube cube)
+    {
+        cube.GetComponent<CubeLifeCycle>().ReleaseToPoolCube -= Release;
+
+        Destroy(cube.gameObject);
+    }
+
+    private void GetCube()
+    {
+        _pool.Get();
+    }
+
+    private void Release(Cube cube)
+    {
+        _pool.Release(cube);
     }
 
     private void InitialLimitsOfStartingPosition()
