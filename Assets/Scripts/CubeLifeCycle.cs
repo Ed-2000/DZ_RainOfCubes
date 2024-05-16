@@ -7,8 +7,8 @@ public class CubeLifeCycle : MonoBehaviour
 {
     private CubeCollision _cubeCollision;
     private int _lifetime;
-    private int _minLifetime = 1;
-    private int _maxLifetime = 1;
+    private int _minLifetime = 2;
+    private int _maxLifetime = 5;
 
     public event Action<Cube> ReleaseToPoolCube;
 
