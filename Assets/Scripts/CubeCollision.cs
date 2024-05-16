@@ -15,7 +15,7 @@ public class CubeCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.GetComponent<Platforma>() != null)
+        if (collision.transform.TryGetComponent(out Platforma _))
         {
             if (_isFirstCollisionWithPlatforma)
             {
