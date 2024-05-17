@@ -5,21 +5,21 @@ using UnityEngine;
 [RequireComponent(typeof(CubeCollision), typeof(Cube))]
 public class CubeLifeCycle : MonoBehaviour
 {
-    [SerializeField] private Bomb _bombPrefabe;
-    [SerializeField] private Spawner<Bomb> _spawner;
+    private BombsSpawner _bombsSpawner;
 
     private CubeCollision _cubeCollision;
     private int _lifetime;
     private int _minLifetime = 2;
     private int _maxLifetime = 5;
 
+    public BombsSpawner BombsSpawner { get => _bombsSpawner; set => _bombsSpawner = value; }
+
     public event Action<Cube> ReleaseToPoolCube;
 
-    private void OnEnable()
+    private void Start()
     {
-        _spawner = new Spawner<Bomb>();
-
         _cubeCollision = GetComponent<CubeCollision>();
+
         _cubeCollision.TouchedPlatform += ReleaseToPoolWithDelayStarter;
     }
 
@@ -41,13 +41,7 @@ public class CubeLifeCycle : MonoBehaviour
         for (int i = delay; i > 0; i--)
             yield return wait;
 
-        SpawnBomb();
+        BombsSpawner.GetBomb(transform.position);
         ReleaseToPoolCube?.Invoke(gameObject.GetComponent<Cube>());
-    }
-
-    private void SpawnBomb()
-    {
-        _spawner.Pool.Get();
-        Instantiate(_bombPrefabe, transform.position, Quaternion.identity);
     }
 }

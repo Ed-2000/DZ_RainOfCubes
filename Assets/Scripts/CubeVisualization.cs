@@ -4,16 +4,26 @@ using UnityEngine;
 public class CubeVisualization : MonoBehaviour
 {
     private CubeCollision _cubeCollision;
+    private CubeLifeCycle _ñubeLifeCycle;
+    private Renderer _renderer;
+    private Color _baseColor;
 
-    private void OnEnable()
+    private void Awake()
     {
+        _renderer = GetComponent<Renderer>();
         _cubeCollision = GetComponent<CubeCollision>();
+        _ñubeLifeCycle = GetComponent<CubeLifeCycle>();
+
+        _baseColor = _renderer.material.color;
+
         _cubeCollision.TouchedPlatform += SetRandomColor;
+        _ñubeLifeCycle.ReleaseToPoolCube += SetBaseColor;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         _cubeCollision.TouchedPlatform -= SetRandomColor;
+        _ñubeLifeCycle.ReleaseToPoolCube -= SetBaseColor;
     }
 
     private void SetRandomColor()
@@ -25,6 +35,11 @@ public class CubeVisualization : MonoBehaviour
         float valueMin = 0.75f;
         float valueMax = 1;
 
-        GetComponent<Renderer>().material.color = Random.ColorHSV(hueMin, hueMax, saturationMin, saturationMax, valueMin, valueMax);
+        _renderer.material.color = Random.ColorHSV(hueMin, hueMax, saturationMin, saturationMax, valueMin, valueMax);
+    }
+
+    private void SetBaseColor(Cube cube)
+    {
+        _renderer.material.color = _baseColor;
     }
 }

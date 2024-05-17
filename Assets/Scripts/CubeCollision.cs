@@ -4,23 +4,23 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class CubeCollision : MonoBehaviour
 {
-    private bool _isFirstCollisionWithPlatforma = true;
+    private bool _isFirstCollisionWithPlatform = true;
 
     public event Action TouchedPlatform;
 
     private void OnDisable()
     {
-        _isFirstCollisionWithPlatforma = true;
+        _isFirstCollisionWithPlatform = true;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.TryGetComponent(out Platforma _))
+        if (collision.transform.TryGetComponent(out Platform _))
         {
-            if (_isFirstCollisionWithPlatforma)
+            if (_isFirstCollisionWithPlatform)
             {
                 TouchedPlatform?.Invoke();
-                _isFirstCollisionWithPlatforma = false;
+                _isFirstCollisionWithPlatform = false;
             }
         }
     }

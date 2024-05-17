@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent (typeof(Renderer))]
 public class Bomb : MonoBehaviour
 {
-    private float _explosionForce = 500.0f;
+    private float _explosionForce = 300.0f;
     private float _radius = 15.0f;
     private int _lifetime;
     private int _minLifetime = 2;

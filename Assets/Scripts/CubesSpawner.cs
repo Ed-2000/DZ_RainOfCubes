@@ -1,13 +1,13 @@
+using System;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CubesSpawner : MonoBehaviour
+public class CubesSpawner : Spawner<Cube>
 {
-    [SerializeField] private Cube _cubePrefab;
-    [SerializeField] private Platforma _platform;
+    [SerializeField] private Platform _platform;
+    [SerializeField] private BombsSpawner _bombsSpawner;
 
     private CubeLifeCycle _cubeLifeCycle;
-    private ObjectPool<Cube> _pool;
     private Vector3 _spawnPosition;
     private float _startSpawnTime = 0.0f;
     private float _spawnRepeatRate = 0.15f;
@@ -16,13 +16,15 @@ public class CubesSpawner : MonoBehaviour
     private float _minSpawnPositionZ;
     private float _maxSpawnPositionZ;
 
-    private void Start()
+    public event Action<CubeLifeCycle> NewCubeCreated;
+
+    private void Awake()
     {
         InitialLimitsOfStartingPosition();
 
-        _pool = new ObjectPool<Cube>
+        Pool = new ObjectPool<Cube>
             (
-            createFunc: () => Instantiate(_cubePrefab),
+            createFunc: () => CreateFunc(),
             actionOnGet: (obj) => ActionOnGet(obj),
             actionOnRelease: (obj) => ActionOnRelease(obj),
             actionOnDestroy: (obj) => ActionOnDestroy(obj)
@@ -31,46 +33,53 @@ public class CubesSpawner : MonoBehaviour
         InvokeRepeating(nameof(GetCube), _startSpawnTime, _spawnRepeatRate);
     }
 
-    private void ActionOnGet(Cube cube)
+    private Cube CreateFunc()
     {
-        cube.GetComponent<CubeLifeCycle>().ReleaseToPoolCube += Release;
+        Cube cube = Instantiate(SpawnedObject);
+        CubeLifeCycle cubeLifeCycle = cube.GetComponent<CubeLifeCycle>();
+        cubeLifeCycle.ReleaseToPoolCube += Release;
+        cubeLifeCycle.BombsSpawner = _bombsSpawner;
 
-        _spawnPosition.x = Random.Range(_minSpawnPositionX, _maxSpawnPositionX);
-        _spawnPosition.z = Random.Range(_minSpawnPositionZ, _maxSpawnPositionZ);
+        return cube;
+    }
+
+    protected override void ActionOnGet(Cube cube)
+    {
+        //NewCubeCreated?.Invoke(cube.GetComponent<CubeLifeCycle>());
+
+        _spawnPosition.x = UnityEngine.Random.Range(_minSpawnPositionX, _maxSpawnPositionX);
+        _spawnPosition.z = UnityEngine.Random.Range(_minSpawnPositionZ, _maxSpawnPositionZ);
 
         cube.transform.position = _spawnPosition;
         cube.gameObject.SetActive(true);
     }
 
-    private void ActionOnRelease(Cube cube)
+    protected override void ActionOnRelease(Cube cube)
     {
-        cube.GetComponent<CubeLifeCycle>().ReleaseToPoolCube -= Release;
-
         cube.gameObject.SetActive(false);
     }
 
-    private void ActionOnDestroy(Cube cube)
+    protected override void ActionOnDestroy(Cube cube)
     {
         cube.GetComponent<CubeLifeCycle>().ReleaseToPoolCube -= Release;
-
         Destroy(cube.gameObject);
     }
 
-    private void GetCube()
+    protected override void Release(Cube cube)
     {
-        _pool.Get();
+        Pool.Release(cube);
     }
 
-    private void Release(Cube cube)
+    protected void GetCube()
     {
-        _pool.Release(cube);
+        Pool.Get();
     }
 
     private void InitialLimitsOfStartingPosition()
     {
         int height = 5;
         int variableToSubtractHalf = 2;
-        float indentationFromEdgeOfPlatform = _cubePrefab.transform.localScale.x / variableToSubtractHalf;
+        float indentationFromEdgeOfPlatform = SpawnedObject.transform.localScale.x / variableToSubtractHalf;
         Transform platformTransform = _platform.transform;
 
         _spawnPosition.y = _platform.transform.position.y + height;

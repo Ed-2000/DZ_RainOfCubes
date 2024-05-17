@@ -1,35 +1,31 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
+public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] private T _spawnedObject;
+    [SerializeField] protected T SpawnedObject;
 
-    public ObjectPool<T> Pool;
+    protected int MaxSize = 15;
+    protected ObjectPool<T> Pool;
+    protected Vector3 SpawnPosition;
 
-    private void Awake()
-    {
-        Pool = new ObjectPool<T>
-            (
-            createFunc: () => Instantiate(_spawnedObject),
-            actionOnGet: (obj) => ActionOnGet(obj),
-            actionOnRelease: (obj) => ActionOnRelease(obj),
-            actionOnDestroy: (obj) => ActionOnDestroy(obj)
-            );
-    }
-
-    private void ActionOnGet(T spawnedObject)
+    protected virtual void ActionOnGet(T spawnedObject)
     {
         spawnedObject.gameObject.SetActive(true);
     }
 
-    private void ActionOnRelease(T spawnedObject)
+    protected virtual void ActionOnRelease(T spawnedObject)
     {
         spawnedObject.gameObject.SetActive(false);
     }
 
-    private void ActionOnDestroy(T spawnedObject)
+    protected virtual void ActionOnDestroy(T spawnedObject)
     {
         Destroy(spawnedObject.gameObject);
+    }
+
+    protected virtual void Release(T spawnedObject)
+    {
+        Pool.Release(spawnedObject);
     }
 }
