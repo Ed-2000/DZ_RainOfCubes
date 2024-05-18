@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,11 +13,12 @@ public class Bomb : MonoBehaviour
     private int _maxLifetime = 5;
     private Material material;
 
+    public event Action<Bomb> HasExplosion;
 
     private void Awake()
     {
         material = gameObject.GetComponent<Renderer>().material;
-        _lifetime = Random.Range(_minLifetime, _maxLifetime);
+        _lifetime = UnityEngine.Random.Range(_minLifetime, _maxLifetime);
 
         StartCoroutine(DisappearAndExplosion());
     }
@@ -26,7 +28,7 @@ public class Bomb : MonoBehaviour
         foreach (var explosionObject in GetExplosionObjects())
             explosionObject.AddExplosionForce(_explosionForce, transform.position, _radius);
 
-        Destroy(gameObject);
+        HasExplosion(gameObject.GetComponent<Bomb>());
     }
 
     private List<Rigidbody> GetExplosionObjects()

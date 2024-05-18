@@ -586,6 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnedObject: {fileID: 4091991899258751278, guid: a0514f3604fabd14e80b8266778bdc45, type: 3}
+  CountOfCreatedObjects: 0
   _platform: {fileID: 668213005}
   _bombsSpawner: {fileID: 756758859}
 --- !u!4 &756758858
@@ -616,6 +617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnedObject: {fileID: 3967243127573097656, guid: af5276f7dec642042ac7ad53d96f8ebb, type: 3}
+  CountOfCreatedObjects: 0
 --- !u!1 &761414362
 GameObject:
   m_ObjectHideFlags: 0
@@ -1302,7 +1304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1854188717
 RectTransform:
   m_ObjectHideFlags: 0

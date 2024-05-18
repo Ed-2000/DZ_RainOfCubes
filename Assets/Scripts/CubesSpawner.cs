@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -10,13 +9,11 @@ public class CubesSpawner : Spawner<Cube>
     private CubeLifeCycle _cubeLifeCycle;
     private Vector3 _spawnPosition;
     private float _startSpawnTime = 0.0f;
-    private float _spawnRepeatRate = 0.15f;
+    private float _spawnRepeatRate = 0.35f;
     private float _minSpawnPositionX;
     private float _maxSpawnPositionX;
     private float _minSpawnPositionZ;
     private float _maxSpawnPositionZ;
-
-    public event Action<CubeLifeCycle> NewCubeCreated;
 
     private void Awake()
     {
@@ -39,13 +36,14 @@ public class CubesSpawner : Spawner<Cube>
         CubeLifeCycle cubeLifeCycle = cube.GetComponent<CubeLifeCycle>();
         cubeLifeCycle.ReleaseToPoolCube += Release;
         cubeLifeCycle.BombsSpawner = _bombsSpawner;
+        CountOfCreatedObjects++;
 
         return cube;
     }
 
     protected override void ActionOnGet(Cube cube)
     {
-        //NewCubeCreated?.Invoke(cube.GetComponent<CubeLifeCycle>());
+        CountOfActiveObjects = Pool.CountActive;
 
         _spawnPosition.x = UnityEngine.Random.Range(_minSpawnPositionX, _maxSpawnPositionX);
         _spawnPosition.z = UnityEngine.Random.Range(_minSpawnPositionZ, _maxSpawnPositionZ);
@@ -54,20 +52,10 @@ public class CubesSpawner : Spawner<Cube>
         cube.gameObject.SetActive(true);
     }
 
-    protected override void ActionOnRelease(Cube cube)
-    {
-        cube.gameObject.SetActive(false);
-    }
-
     protected override void ActionOnDestroy(Cube cube)
     {
         cube.GetComponent<CubeLifeCycle>().ReleaseToPoolCube -= Release;
         Destroy(cube.gameObject);
-    }
-
-    protected override void Release(Cube cube)
-    {
-        Pool.Release(cube);
     }
 
     protected void GetCube()

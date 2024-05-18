@@ -6,7 +6,6 @@ using UnityEngine;
 public class CubeLifeCycle : MonoBehaviour
 {
     private BombsSpawner _bombsSpawner;
-
     private CubeCollision _cubeCollision;
     private int _lifetime;
     private int _minLifetime = 2;
@@ -16,14 +15,13 @@ public class CubeLifeCycle : MonoBehaviour
 
     public event Action<Cube> ReleaseToPoolCube;
 
-    private void Start()
+    private void Awake()
     {
         _cubeCollision = GetComponent<CubeCollision>();
-
         _cubeCollision.TouchedPlatform += ReleaseToPoolWithDelayStarter;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         _cubeCollision.TouchedPlatform -= ReleaseToPoolWithDelayStarter;
     }
