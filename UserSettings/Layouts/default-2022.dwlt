@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1536
     height: 790.4
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Project
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -921,9 +921,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -7.821432, y: 0.77603984, z: 8.030863}
+    m_Target: {x: 0.7590164, y: 1.6022202, z: -4.328968}
     speed: 2
-    m_Value: {x: -3.422247, y: 0.675, z: 2.039764}
+    m_Value: {x: 0.7590164, y: 1.6022202, z: -4.328968}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -973,9 +973,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0.30191422, y: 0.4697146, z: -0.17487416, w: 0.810947}
   m_Size:
-    m_Target: 0.6746737
+    m_Target: 3.043282
     speed: 2
-    m_Value: 0.64562076
+    m_Value: 3.1866827
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1107,9 +1107,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: aa5b0000
-      m_LastClickedID: 23466
-      m_ExpandedIDs: 16e0ffff2cfbffff
+      m_SelectedIDs: e0e7ffff
+      m_LastClickedID: -6176
+      m_ExpandedIDs: 2cfbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: Bomb(Clone)
@@ -1120,7 +1120,7 @@ MonoBehaviour:
           y: 0
           width: 0
           height: 0
-        m_UserData: -14652
+        m_UserData: -6176
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
         m_OriginalEventType: 0
@@ -1250,7 +1250,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c62300003c660000d06500002e6d0000f46e00006e690000406900005c6200007e5c00003e630000865c000086620000825b00002a6e0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
