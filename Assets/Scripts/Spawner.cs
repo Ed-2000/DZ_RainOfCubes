@@ -4,9 +4,8 @@ using UnityEngine.Pool;
 public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
     [SerializeField] protected T SpawnedObject;
-    [SerializeField] protected int CountOfCreatedObjects = 0;
-    [SerializeField] protected int CountOfActiveObjects = 0;
 
+    protected int CountOfCreatedObjects = 0;
     protected ObjectPool<T> Pool;
     protected Vector3 SpawnPosition;
 
