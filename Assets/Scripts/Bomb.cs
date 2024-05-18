@@ -11,6 +11,7 @@ public class Bomb : MonoBehaviour
     private int _lifetime;
     private int _minLifetime = 2;
     private int _maxLifetime = 5;
+    private Material baseMaterial;
     private Material material;
 
     public event Action<Bomb> HasExplosion;
@@ -18,8 +19,12 @@ public class Bomb : MonoBehaviour
     private void Awake()
     {
         material = gameObject.GetComponent<Renderer>().material;
-        _lifetime = UnityEngine.Random.Range(_minLifetime, _maxLifetime);
+        baseMaterial = material;
+    }
 
+    private void OnEnable()
+    {
+        _lifetime = UnityEngine.Random.Range(_minLifetime, _maxLifetime);
         StartCoroutine(DisappearAndExplosion());
     }
 
@@ -49,7 +54,7 @@ public class Bomb : MonoBehaviour
     {
         var wait = new WaitForEndOfFrame();
         float currentTime = 0.0f;
-        Color color = material.color;
+        Color color = baseMaterial.color;
         float speed = 1.0f / _lifetime;
 
         while (currentTime <= _lifetime)

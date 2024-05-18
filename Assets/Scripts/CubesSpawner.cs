@@ -6,7 +6,6 @@ public class CubesSpawner : Spawner<Cube>
     [SerializeField] private Platform _platform;
     [SerializeField] private BombsSpawner _bombsSpawner;
 
-    private CubeLifeCycle _cubeLifeCycle;
     private Vector3 _spawnPosition;
     private float _startSpawnTime = 0.0f;
     private float _spawnRepeatRate = 0.35f;
