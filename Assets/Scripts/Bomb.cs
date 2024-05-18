@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof(Renderer))]
+[RequireComponent(typeof(Renderer))]
 public class Bomb : MonoBehaviour
 {
     private float _explosionForce = 300.0f;
@@ -11,20 +11,22 @@ public class Bomb : MonoBehaviour
     private int _lifetime;
     private int _minLifetime = 2;
     private int _maxLifetime = 5;
-    private Material baseMaterial;
-    private Material material;
+    private Renderer _renderer;
+    private Color _baseColor;
 
     public event Action<Bomb> HasExplosion;
 
     private void Awake()
     {
-        material = gameObject.GetComponent<Renderer>().material;
-        baseMaterial = material;
+        _renderer = gameObject.GetComponent<Renderer>();
+        _baseColor = _renderer.material.color;
     }
 
     private void OnEnable()
     {
         _lifetime = UnityEngine.Random.Range(_minLifetime, _maxLifetime);
+        _renderer.material.color = _baseColor;
+
         StartCoroutine(DisappearAndExplosion());
     }
 
@@ -54,7 +56,7 @@ public class Bomb : MonoBehaviour
     {
         var wait = new WaitForEndOfFrame();
         float currentTime = 0.0f;
-        Color color = baseMaterial.color;
+        Color color = _renderer.material.color;
         float speed = 1.0f / _lifetime;
 
         while (currentTime <= _lifetime)
@@ -62,7 +64,7 @@ public class Bomb : MonoBehaviour
             currentTime += Time.deltaTime;
 
             color.a = Mathf.MoveTowards(color.a, 0, speed * Time.deltaTime);
-            material.color = color;
+            _renderer.material.color = color;
 
             yield return wait;
         }
